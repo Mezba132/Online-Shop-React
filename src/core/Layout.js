@@ -1,20 +1,18 @@
-import React from 'react';
-import Menu from './Menu';
+import React from "react";
+import Header from "./Header";
+import Footer from "./Footer";
 
 const Layout = ({
-    title = "title",
-    description="description",
-    className,
-    children
+  title = "title",
+  description = "description",
+  className,
+  children,
 }) => (
-    <div>
-        <Menu />
-        <div className='jumbotron'>
-            <h2>{title}</h2>
-            <p className='lead'>{description}</p>
-        </div>
-        <div className={className}>{children}</div>
-    </div>
+  <>
+    <Header />
+    <div className={`content ${className}`}>{children}</div>
+    <Footer />
+  </>
 );
 
 export default Layout;

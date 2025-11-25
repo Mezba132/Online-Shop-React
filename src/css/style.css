@@ -112,3 +112,20 @@
         background-position: 0% 50%;
     }
 }
+
+html, body, #root {
+    height: 100%;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1 0 auto;
+}
+
+.footer-bottom {
+    flex-shrink: 0;
+}

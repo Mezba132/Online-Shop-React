@@ -1,112 +1,112 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import Layout from "../core/Layout";
 import { isAuthenticate } from "../auth";
-import { Redirect } from 'react-router-dom'
-import { getUserInfo, updateUserInfo, updateUser } from './UserApi'
+import { Redirect } from "react-router-dom";
+import { getUserInfo, updateUserInfo, updateUser } from "./UserApi";
 
 const Profile = ({ match }) => {
-    const [values, setValues] = useState({
-        name : '',
-        email: '',
-        password: '',
-        error: false,
-        success: false
-    })
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    password: "",
+    error: false,
+    success: false,
+  });
 
-    const {name, email, password, error, success } = values;
-    
-    const { token } = isAuthenticate()
+  const { name, email, password, error, success } = values;
 
-    const init = (userId) => {
-        getUserInfo(userId, token)
-        .then(data => {
-            const {name, email } = data
-            if(data.error) {
-                setValues({...values, error: data.error})
-            }
-            else {
-                setValues({...values, name : name, email : email, error: false })
-            }
-        })
-    }
+  const { token } = isAuthenticate();
 
-    const profileUpdate = (name, email, password) => (
-        <form>
-            <div className="form-group">
-                <label className="text-muted">Name</label>
-                <input
-                   type="text"
-                   onChange={handleChange('name')}
-                   className="form-control"
-                   value={name}
-                />
-            </div>
-            <div className="form-group">
-                <label className="text-muted">Email</label>
-                <input
-                   type="email"
-                   onChange={handleChange('email')}
-                   className="form-control"
-                   value={email}
-                />
-            </div>
-            <div className="form-group">
-                <label className="text-muted">Password</label>
-                <input
-                   type="password"
-                   onChange={handleChange('password')}
-                   className="form-control"
-                   value={password}
-                />
-            </div>
+  const init = (userId) => {
+    getUserInfo(userId, token).then((data) => {
+      if (!data) return;
+      const { name, email } = data;
+      if (data && data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({ ...values, name: name, email: email, error: false });
+      }
+    });
+  };
 
-            <button onClick={clickSubmit} className="btn btn-primary">Submit</button>
-        </form>
-    )
+  const profileUpdate = (name, email, password) => (
+    <form>
+      <div className="form-group">
+        <label className="text-muted">Name</label>
+        <input
+          type="text"
+          onChange={handleChange("name")}
+          className="form-control"
+          value={name}
+        />
+      </div>
+      <div className="form-group">
+        <label className="text-muted">Email</label>
+        <input
+          type="email"
+          onChange={handleChange("email")}
+          className="form-control"
+          value={email}
+        />
+      </div>
+      <div className="form-group">
+        <label className="text-muted">Password</label>
+        <input
+          type="password"
+          onChange={handleChange("password")}
+          className="form-control"
+          value={password}
+        />
+      </div>
 
-    const handleChange = name => e => {
-        setValues({...values, error: false, [name] : e.target.value })
-    }
+      <button onClick={clickSubmit} className="btn btn-primary">
+        Submit
+      </button>
+    </form>
+  );
 
-    const clickSubmit = (e) => {
-        e.preventDefault();
-        updateUserInfo(match.params.userId, token, {name, email, password})
-        .then(data => {
-            if(data.error) {
-                console.log(data.error)
-            }
-            else {
-                updateUser(data, () => {
-                    setValues({
-                        ...values,
-                        name: data.name,
-                        email: data.email,
-                        success: true
-                    })
-                })
-            }
-        })
-    }
+  const handleChange = (name) => (e) => {
+    setValues({ ...values, error: false, [name]: e.target.value });
+  };
 
-    const redirectUser = () => (
-        success && <Redirect to="/user/dashboard" />
-    )
+  const clickSubmit = (e) => {
+    e.preventDefault();
+    updateUserInfo(match.params.userId, token, { name, email, password }).then(
+      (data) => {
+        if (!data) return;
+        if (data && data.error) {
+          console.log(data.error);
+        } else {
+          updateUser(data, () => {
+            setValues({
+              ...values,
+              name: data.name,
+              email: data.email,
+              success: true,
+            });
+          });
+        }
+      }
+    );
+  };
 
-    useEffect(() => {
-        init(match.params.userId)
-    }, [])
+  const redirectUser = () => success && <Redirect to="/user/dashboard" />;
 
-    return (
-        <Layout
-            title="Profile"
-            description="Update Your Profile"
-            className="container-fluid"
-        >
-            {/* {JSON.stringify(values)} */}
-            {profileUpdate(name, email, password)}
-            {redirectUser(success)}
-        </Layout>
-    )
-}
+  useEffect(() => {
+    init(match.params.userId);
+  }, []);
+
+  return (
+    <Layout
+      title="Profile"
+      description="Update Your Profile"
+      className="container-fluid"
+    >
+      {/* {JSON.stringify(values)} */}
+      {profileUpdate(name, email, password)}
+      {redirectUser(success)}
+    </Layout>
+  );
+};
 
 export default Profile;
