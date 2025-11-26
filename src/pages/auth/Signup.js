@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import Layout from "../../components/layout/Layout";
 import { Link } from "react-router-dom";
 import { signup } from "../../services/AuthService";
+import Layout from "../../components/layout/Layout";
+import "../../assets/css/auth.css";
 
 const SignUp = () => {
   const [values, setValues] = useState({
@@ -69,27 +70,27 @@ const SignUp = () => {
   const signUpForm = () => (
     <form>
       <div className="form-group">
-        <label className="text-muted">Name</label>
         <input
           onChange={handleChange("name")}
           type="text"
           className="form-control"
+          placeholder="Name"
         />
       </div>
       <div className="form-group">
-        <label className="text-muted">Email</label>
         <input
           onChange={handleChange("email")}
           type="email"
           className="form-control"
+          placeholder="Email"
         />
       </div>
       <div className="form-group">
-        <label className="text-muted">Password</label>
         <input
           onChange={handleChange("password")}
           type="password"
           className="form-control"
+          placeholder="Password"
         />
       </div>
       <button onClick={clickSubmit} className="btn btn-primary">
@@ -100,14 +101,27 @@ const SignUp = () => {
 
   return (
     <Layout
-      title="SignUp"
-      description="SignUp to E-Commerce Site for NodeJS, ReactJS"
-      className="cotainer col-md-8 offset-md-2"
+      title="SignIn"
+      description="SignIn to E-Commerce Site for NodeJS, ReactJS"
+      className="container"
     >
-      {showError()}
-      {showSuccess()}
-      {signUpForm()}
-      {/*{JSON.stringify(values)}*/}
+      <div className="auth-container">
+        <div className="auth-left">
+          <h1>Join Us!</h1>
+          <p>Already have an account?</p>
+          <Link to="/signin" className="btn-auth">
+            Sign In
+          </Link>
+        </div>
+        <div className="auth-right">
+          <div className="auth-form-container">
+            <h2>Sign Up</h2>
+            {showError()}
+            {showSuccess()}
+            {signUpForm()}
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 };

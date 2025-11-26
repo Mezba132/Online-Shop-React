@@ -3,6 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import ShowImage from "./ShowImage";
 import moment from "moment";
 import { addItem, updateItem, removeItem } from "../../utils/CartHelpers";
+import "../../assets/css/card.css";
 
 const ProductCard = ({
   product,
@@ -20,7 +21,7 @@ const ProductCard = ({
     return (
       showProductButton && (
         <Link to={`/product/${product._id}`}>
-          <button className="btn btn-outline-primary mt-2 mb-2 mr-2">
+          <button className="btn btn-outline-primary mt-2 mb-2">
             View Product
           </button>
         </Link>
@@ -108,7 +109,7 @@ const ProductCard = ({
   };
 
   return (
-    <div className="card">
+    <div className="card product-card">
       <div className="card-header name">{product.name}</div>
       <div className="card-body">
         {shouldRedirect()}

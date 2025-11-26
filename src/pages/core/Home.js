@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/layout/Layout";
-import { getProducts } from "../../services/CoreService";
+import { getProducts, list } from "../../services/CoreService";
 import Card from "../../components/cards/ProductCard";
-import Search from "../../components/shared/Search";
+import "../../assets/css/home.css";
 
 const Home = () => {
   const [productBySell, setProductBySell] = useState([]);
   const [productByArrival, setProductByArrival] = useState([]);
   const [error, setError] = useState(false);
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState([]);
+  const [searched, setSearched] = useState(false);
 
   const loadProductBySell = () => {
     getProducts("sold").then((data) => {
@@ -36,30 +39,109 @@ const Home = () => {
     loadProductByArrival();
   }, []);
 
-  return (
-    <Layout
-      title="Home"
-      description="E-Commerce Site for NodeJS, ReactJS"
-      className="container-fluid"
-    >
-      <Search />
-      <h2 className="mb-4">New Arrivals</h2>
+  const searchData = () => {
+    if (search) {
+      list({ search: search || undefined })
+        .then((response) => {
+          if (!response) return;
+          if (response && response.error) {
+            setError(response.error);
+          } else {
+            setResults(response);
+            setSearched(true);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setResults([]);
+      setSearched(false);
+    }
+  };
+
+  const searchSubmit = (e) => {
+    e.preventDefault();
+    searchData();
+  };
+
+  const handleChange = (event) => {
+    setSearch(event.target.value);
+    setSearched(false);
+  };
+
+  const searchMessage = (searched, results) => {
+    if (searched && results.length > 0) {
+      return `Found ${results.length} products`;
+    }
+    if (searched && results.length < 1) {
+      return `No Products Found`;
+    }
+  };
+
+  const searchProducts = (results = []) => (
+    <div>
+      <h2 className="mt-4 mb-4">{searchMessage(searched, results)}</h2>
       <div className="row">
-        {productByArrival.map((product, i) => (
-          <div key={i} className="col-3 mb-5">
+        {results.map((product, i) => (
+          <div key={i} className="col-md-4 mb-5">
             <Card product={product} />
           </div>
         ))}
+      </div>
+    </div>
+  );
+
+  const searchForm = () => (
+    <div className="search-container-home">
+        <form onSubmit={searchSubmit} className="search-form-home">
+            <input
+                type="search"
+                className="form-control"
+                onChange={handleChange}
+                placeholder="Search by Name"
+            />
+            <button className="input-group-text">Search</button>
+        </form>
+    </div>
+);
+
+
+  return (
+    <Layout className="container-fluid">
+      <div className="banner">
+        <div className="banner-content">
+          <h1>Welcome to E-Shop</h1>
+          <p>The best place to find your favorite products</p>
+          {searchForm()}
+        </div>
       </div>
 
-      <h2 className="mb-4">Most Sells Products</h2>
-      <div className="row">
-        {productBySell.map((product, i) => (
-          <div key={i} className="col-3 mb-5">
-            <Card product={product} />
+      {searched ? (
+        searchProducts(results)
+      ) : (
+        <>
+          <div className="product-section">
+            <h2 className="mb-4">New Arrivals</h2>
+            <div className="row">
+              {productByArrival.map((product, i) => (
+                <div key={i} className="col-md-4 mb-5">
+                  <Card product={product} />
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
+
+          <div className="product-section">
+            <h2 className="mb-4">Most Sells Products</h2>
+            <div className="row">
+              {productBySell.map((product, i) => (
+                <div key={i} className="col-md-4 mb-5">
+                  <Card product={product} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </Layout>
   );
 };

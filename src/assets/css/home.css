@@ -1,0 +1,66 @@
+
+.banner {
+    position: relative;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+
+.banner-content {
+    max-width: 600px;
+    z-index: 1;
+}
+
+.banner h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.banner p {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.search-container-home {
+    margin-top: 20px;
+}
+
+.search-form-home {
+    display: flex;
+    justify-content: center;
+}
+
+.search-form-home input[type="search"] {
+    width: 50%;
+    padding: 15px;
+    border-radius: 25px 0 0 25px;
+    border: none;
+    outline: none;
+}
+
+.search-form-home button {
+    padding: 15px 20px;
+    border-radius: 0 25px 25px 0;
+    border: none;
+    background-color: #ff9900;
+    color: white;
+    cursor: pointer;
+}
+
+.product-section h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    text-align: center;
+}

@@ -1,131 +1,140 @@
 import React, { useState } from "react";
+import { Link, Redirect } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
-import { Redirect } from "react-router-dom";
-import {
-  signin,
-  authenticate,
-  isAuthenticate,
-} from "../../services/AuthService";
+import { signin, authenticate, isAuthenticate } from "../../services/AuthService";
+import "../../assets/css/auth.css";
 
 const SignIn = () => {
-  const [values, setValues] = useState({
-    email: "",
-    password: "",
-    error: "",
-    loading: false,
-    redirectToReferrer: false,
-  });
-
-  const { email, password, error, loading, redirectToReferrer } = values;
-
-  const { user } = isAuthenticate();
-
-  const handleChange = (value) => (e) => {
-    setValues({
-      ...values,
-      error: "",
-      [value]: e.target.value,
+    const [values, setValues] = useState({
+        email: "",
+        password: "",
+        error: "",
+        loading: false,
+        redirectToReferrer: false,
     });
-  };
 
-  const clickSubmit = (e) => {
-    e.preventDefault();
-    setValues({ ...values, error: "", loading: true });
-    signin({ email, password, error, loading, redirectToReferrer })
-      .then((data) => {
-        if (!data) {
-          setValues({ ...values, error: "Server error", loading: false });
-          return;
-        }
-        if (data && data.error) {
-          setValues({
+    const { email, password, error, loading, redirectToReferrer } = values;
+
+    const { user } = isAuthenticate();
+
+    const handleChange = (value) => (e) => {
+        setValues({
             ...values,
-            error: data.error,
-            loading: false,
-          });
-        } else {
-          authenticate(data, () => {
-            setValues({
-              ...values,
-              redirectToReferrer: true,
+            error: "",
+            [value]: e.target.value,
+        });
+    };
+
+    const clickSubmit = (e) => {
+        e.preventDefault();
+        setValues({ ...values, error: "", loading: true });
+        signin({ email, password, error, loading, redirectToReferrer })
+            .then((data) => {
+                if (!data) {
+                    setValues({ ...values, error: "Server error", loading: false });
+                    return;
+                }
+                if (data && data.error) {
+                    setValues({
+                        ...values,
+                        error: data.error,
+                        loading: false,
+                    });
+                } else {
+                    authenticate(data, () => {
+                        setValues({
+                            ...values,
+                            redirectToReferrer: true,
+                        });
+                    });
+                }
+            })
+            .catch((err) => {
+                console.log(err);
             });
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+    };
 
-  const showError = () => (
-    <div
-      className="alert alert-danger"
-      style={{ display: error ? "" : "none" }}
-    >
-      {error}
-    </div>
-  );
-
-  const showLoading = () =>
-    loading && (
-      <div
-        className="alert alert-info"
-        style={{ display: loading ? "" : "none" }}
-      >
-        <h2>Loading.........</h2>
-      </div>
+    const showError = () => (
+        <div
+            className="alert alert-danger"
+            style={{ display: error ? "" : "none" }}
+        >
+            {error}
+        </div>
     );
 
-  const redirectTo = () => {
-    if (redirectToReferrer) {
-      if (user && user.role === 1) {
-        return <Redirect to="/admin/dashboard" />;
-      } else {
-        return <Redirect to="/user/dashboard" />;
-      }
-    }
+    const showLoading = () =>
+        loading && (
+            <div
+                className="alert alert-info"
+                style={{ display: loading ? "" : "none" }}
+            >
+                <h2>Loading.........</h2>
+            </div>
+        );
 
-    if (isAuthenticate()) {
-      return <Redirect to="/" />;
-    }
-  };
+    const redirectTo = () => {
+        if (redirectToReferrer) {
+            if (user && user.role === 1) {
+                return <Redirect to="/admin/dashboard" />;
+            } else {
+                return <Redirect to="/user/dashboard" />;
+            }
+        }
 
-  const signInForm = () => (
-    <form>
-      <div className="form-group">
-        <label className="text-muted">Email</label>
-        <input
-          onChange={handleChange("email")}
-          type="email"
-          className="form-control"
-        />
-      </div>
-      <div className="form-group">
-        <label className="text-muted">Password</label>
-        <input
-          onChange={handleChange("password")}
-          type="password"
-          className="form-control"
-        />
-      </div>
-      <button onClick={clickSubmit} className="btn btn-primary">
-        LogIn
-      </button>
-    </form>
-  );
+        if (isAuthenticate()) {
+            return <Redirect to="/" />;
+        }
+    };
 
-  return (
-    <Layout
-      title="SignIn"
-      description="SignUp to E-Commerce Site for NodeJS, ReactJS"
-      className="cotainer col-md-8 offset-md-2"
-    >
-      {showLoading()}
-      {showError()}
-      {redirectTo()}
-      {signInForm()}
-    </Layout>
-  );
+    const signInForm = () => (
+        <form>
+            <div className="form-group">
+                <input
+                    onChange={handleChange("email")}
+                    type="email"
+                    className="form-control"
+                    placeholder="Email"
+                />
+            </div>
+            <div className="form-group">
+                <input
+                    onChange={handleChange("password")}
+                    type="password"
+                    className="form-control"
+                    placeholder="Password"
+                />
+            </div>
+            <button onClick={clickSubmit} className="btn btn-primary">
+                LogIn
+            </button>
+        </form>
+    );
+
+    return (
+        <Layout
+            title="SignIn"
+            description="SignIn to E-Commerce Site for NodeJS, ReactJS"
+            className="container"
+        >
+            <div className="auth-container">
+                {redirectTo()}
+                <div className="auth-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Don't have an account?</p>
+                    <Link to="/signup" className="btn-auth">Sign Up</Link>
+                </div>
+                <div className="auth-right">
+                    <div className="auth-form-container">
+                        <h2>Sign In</h2>
+                        {showLoading()}
+                        {showError()}
+                        {signInForm()}
+                    </div>
+                </div>
+            </div>
+        </Layout>
+    );
 };
 
 export default SignIn;

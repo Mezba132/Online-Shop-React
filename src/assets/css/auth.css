@@ -1,0 +1,91 @@
+.auth-container {
+  display: flex;
+  min-height: 80vh;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.auth-left {
+  flex: 1;
+  background: linear-gradient(to right, #ff9900, #ff6600);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 40px;
+  text-align: center;
+}
+
+.auth-left h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.auth-left p {
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+
+.auth-left .btn-auth {
+  margin-top: 30px;
+  padding: 10px 30px;
+  border: 2px solid white;
+  color: white;
+  background-color: transparent;
+  border-radius: 25px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.auth-left .btn-auth:hover {
+  background-color: white;
+  color: #ff9900;
+}
+
+.auth-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
+.auth-form-container {
+  width: 70%;
+  max-width: 450px;
+}
+
+.auth-form-container h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.auth-form-container .form-group {
+  margin-bottom: 25px;
+}
+
+.auth-form-container .form-control {
+  border-radius: 25px;
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+
+.auth-form-container .btn-primary {
+  border-radius: 25px;
+  padding: 15px;
+  width: 100%;
+  background-color: #ff9900;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.auth-form-container .btn-primary:hover {
+  background-color: #ff6600;
+}
