@@ -9,7 +9,7 @@ import { emptyCart } from "../../utils/CartHelpers";
 import { Link } from "react-router-dom";
 import DropIn from "braintree-web-drop-in-react";
 
-const Checkout = ({ product }) => {
+const Checkout = ({ product, setRun, run }) => {
   const [data, setData] = useState({
     isLoading: false,
     success: false,
@@ -24,24 +24,18 @@ const Checkout = ({ product }) => {
   const userId = isAuthenticate() && isAuthenticate().user._id;
   const token = isAuthenticate() && isAuthenticate().token;
 
-  const getToken = (userId, token) => {
-    getBrainTreeClientToken(userId, token).then((data) => {
-      if (!data) {
-        setData({ ...data, error: "Server error" });
-        return;
-      }
-      if (data && data.error) {
-        setData({ ...data, error: data.error });
-      } else {
-        setData({ clientToken: data.clientToken });
-        console.log(data);
-      }
-    });
-  };
-
   useEffect(() => {
+    const getToken = (userId, token) => {
+      getBrainTreeClientToken(userId, token).then((data) => {
+        if (data.error) {
+          setData({ ...data, error: data.error });
+        } else {
+          setData({ clientToken: data.clientToken });
+        }
+      });
+    };
     getToken(userId, token);
-  }, []);
+  }, [userId, token]);
 
   const getTotal = () => {
     return product.reduce((currentValue, nextValue) => {
@@ -59,25 +53,13 @@ const Checkout = ({ product }) => {
     );
   };
 
-  const deliveryAddress = data.address;
-
   const buy = () => {
-    // send the nonce to your server
-    // nonce = data.intance.requestPaymentMethod()
     setData({ isLoading: true });
     let nonce;
-    let getNonce = data.instance
+    data.instance
       .requestPaymentMethod()
       .then((data) => {
-        //console.log(data);
         nonce = data.nonce;
-        // once you have nonce (card type, card number) send nonce as 'paymentMethodNonce'
-        // also total to be charged
-        // console.log(
-        //     "send nonce and total to process : ",
-        //     nonce,
-        //     getTotal(product)
-        // )
         let paymentData = {
           paymentMethodNonce: nonce,
           amount: getTotal(product),
@@ -85,34 +67,36 @@ const Checkout = ({ product }) => {
 
         processPaymentMethod(userId, token, paymentData)
           .then((result) => {
-            // console.log(result)
-            if (!result) return;
-            if (result && result.error) {
+            if (result.error) {
               setData({ ...data, error: result.error, isLoading: false });
             } else {
               const createOrderData = {
                 products: product,
                 transaction_id: result.transaction.id,
                 amount: result.transaction.amount,
-                address: deliveryAddress,
+                address: address,
               };
 
               createOrder(userId, token, createOrderData)
                 .then((response) => {
-                  if (!response) return;
                   emptyCart(() => {
-                    console.log("Thanks dude");
                     setData({ success: response.success, isLoading: false });
+                    setRun(!run);
                   });
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                  setData({ isLoading: false });
+                  console.log(err);
+                });
             }
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            setData({ isLoading: false });
+            console.log(err);
+          });
       })
       .catch((err) => {
-        // console.log("dropin err : ", err);
-        setData({ ...data, error: err.message });
+        setData({ ...data, error: err.message, isLoading: false });
       });
   };
 
@@ -129,14 +113,10 @@ const Checkout = ({ product }) => {
     </div>
   );
 
-  const showLoading = () => (
-    <div
-      className="alert alert-info"
-      style={{ display: success ? "" : "none" }}
-    >
-      Loading... Loading...
-    </div>
-  );
+  const showLoading = () =>
+    data.isLoading && (
+      <div className="alert alert-info">Loading...</div>
+    );
 
   const showSuccess = () => (
     <div
@@ -148,22 +128,21 @@ const Checkout = ({ product }) => {
   );
 
   const showDropIn = () => (
-    // onBlur triggered when mouse cliked on page
     <div onBlur={() => setData({ ...data, error: "" })}>
-      {data.clientToken !== null && product.length > 0 ? (
-        <div>
-          <div className="gorm-group mb-3">
+      {clientToken !== null && product.length > 0 ? (
+        <div className="card-body">
+          <div className="form-group mb-3">
             <label className="text-muted">Delivery Address:</label>
             <textarea
               onChange={handleAddress}
               className="form-control"
-              value={data.address}
+              value={address}
               placeholder="Your Delivery Address"
             />
           </div>
           <DropIn
             options={{
-              authorization: data.clientToken,
+              authorization: clientToken,
             }}
             onInstance={(instance) => (data.instance = instance)}
           />
@@ -176,13 +155,16 @@ const Checkout = ({ product }) => {
   );
 
   return (
-    <div>
-      <h1>Total Amount : {getTotal()} Tk</h1>
-      <hr />
-      {showLoading()}
-      {showSuccess()}
-      {showError()}
-      {showCheckout()}
+    <div className="card">
+      <div className="card-header">
+        <h2>Total Amount: {getTotal()} Tk</h2>
+      </div>
+      <div className="card-body">
+        {showLoading()}
+        {showSuccess()}
+        {showError()}
+        {showCheckout()}
+      </div>
     </div>
   );
 };

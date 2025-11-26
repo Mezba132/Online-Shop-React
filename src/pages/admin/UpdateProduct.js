@@ -8,7 +8,7 @@ import {
   updateProducts,
 } from "../../services/AdminService";
 
-const UpdateCategory = ({ match }) => {
+const UpdateProduct = ({ match }) => {
   const [values, setValues] = useState({
     name: "",
     description: "",
@@ -81,7 +81,7 @@ const UpdateCategory = ({ match }) => {
   // useEffect is similer to lifecycle hooks
   useEffect(() => {
     init(match.params.productId);
-  }, []);
+  }, [match.params.productId]);
 
   const handleChange = (data) => (event) => {
     const value =
@@ -240,4 +240,4 @@ const UpdateCategory = ({ match }) => {
   );
 };
 
-export default UpdateCategory;
+export default UpdateProduct;

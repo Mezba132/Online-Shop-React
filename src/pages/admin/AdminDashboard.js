@@ -3,9 +3,9 @@ import Layout from "../../components/layout/Layout";
 import { isAuthenticate } from "../../services/AuthService";
 import { Link } from "react-router-dom";
 
-const Dashboard = () => {
+const AdminDashboard = () => {
   const {
-    user: { _id, name, email, role },
+    user: { name, email, role },
   } = isAuthenticate();
 
   const adminLinks = () => (
@@ -66,4 +66,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;
