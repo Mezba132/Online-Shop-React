@@ -101,11 +101,7 @@ const Profile = ({ match }) => {
   }, []);
 
   return (
-    <Layout
-      title="Profile"
-      description="Update Your Profile"
-      className="container-fluid"
-    >
+    <Layout className="container-fluid">
       {/* {JSON.stringify(values)} */}
       {profileUpdate(name, email, password)}
       {redirectUser(success)}

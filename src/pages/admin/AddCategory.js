@@ -75,10 +75,7 @@ const AddCategory = () => {
   );
 
   return (
-    <Layout
-      title="Create Category"
-      description={`Hello ${user.name}, Create a New Category For Product`}
-    >
+    <Layout>
       <div className="row">
         <div className="col-md-8 offset-md-2">
           {showError()}

@@ -100,11 +100,7 @@ const SignUp = () => {
   );
 
   return (
-    <Layout
-      title="SignIn"
-      description="SignIn to E-Commerce Site for NodeJS, ReactJS"
-      className="container"
-    >
+    <Layout className="container">
       <div className="auth-container">
         <div className="auth-left">
           <h1>Join Us!</h1>

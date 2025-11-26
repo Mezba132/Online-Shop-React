@@ -34,7 +34,7 @@ const ManageProducts = () => {
   }, []);
 
   return (
-    <Layout title="Manage Product" description="Update Prducts Details">
+    <Layout>
       <div className="row">
         <div className="col-12">
           <h2 className="text-center">Total Products: {products.length}</h2>

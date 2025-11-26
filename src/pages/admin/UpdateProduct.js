@@ -226,10 +226,7 @@ const UpdateCategory = ({ match }) => {
   };
 
   return (
-    <Layout
-      title="Create Product"
-      description={`Hello ${user.name}, Update the Product`}
-    >
+    <Layout>
       <div className="row">
         <div className="col-md-8 offset-md-2">
           {showError()}

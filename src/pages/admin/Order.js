@@ -95,10 +95,7 @@ const Order = () => {
   );
 
   return (
-    <Layout
-      title="Orders List"
-      description={`Hello ${user.name}, Manage your all orders`}
-    >
+    <Layout>
       <div className="row">
         <div className="col-md-8 offset-md-2">
           {showOrders()}

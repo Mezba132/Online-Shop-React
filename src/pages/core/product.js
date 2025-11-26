@@ -35,15 +35,7 @@ const Product = (props) => {
   }, [props]);
 
   return (
-    <Layout
-      title={product.name}
-      description={
-        product &&
-        product.description &&
-        product.description.substring(0, 80) + "..."
-      }
-      className="container-fluid"
-    >
+    <Layout className="container-fluid">
       <div className="row">
         <div className="col-2"></div>
         <div className="col-8 mb-4">

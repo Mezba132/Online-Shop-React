@@ -90,11 +90,7 @@ const Dashboard = () => {
   );
 
   return (
-    <Layout
-      title="DashBoard"
-      description={`Hello ${name}`}
-      className="container"
-    >
+    <Layout className="container">
       <h1 className="mb-5">Welcome to User Dashboard</h1>
 
       <div className="row">

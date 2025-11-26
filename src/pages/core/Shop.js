@@ -101,11 +101,7 @@ const Shop = () => {
   }, []);
 
   return (
-    <Layout
-      title="Shop Page"
-      description="Search and Find Your Products"
-      className="container-fluid"
-    >
+    <Layout className="container-fluid">
       <div className="row">
         <div className="col-4">
           <h2>Filter By Categories</h2>
