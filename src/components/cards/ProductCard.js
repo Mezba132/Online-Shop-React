@@ -20,7 +20,7 @@ const ProductCard = ({
   const showButton = () => {
     return (
       showProductButton && (
-        <Link to={`/product/${product._id}`}>
+        <Link to={`/product/${product._id}`} className="mr-2">
           <button className="btn btn-outline-primary mt-2 mb-2">
             View Product
           </button>
@@ -30,10 +30,9 @@ const ProductCard = ({
   };
 
   const addToCart = () => {
+    // a bug is fixed here
     addItem(product, () => {
-      addItem(product, () => {
-        setRedirect(true);
-      });
+      setRedirect(true);
     });
   };
 
@@ -110,18 +109,26 @@ const ProductCard = ({
 
   return (
     <div className="card product-card">
-      <div className="card-header name">{product.name}</div>
       <div className="card-body">
-        {shouldRedirect()}
-        <ShowImage item={product} url="products" />
-        <p className="lead mt-2 text-truncate">{product.description}</p>
-        <p className="black-10">Price : {product.price}Tk</p>
-        <p className="black-9">
-          Category : {product.category && product.category.name}
-        </p>
-        <p className="black-8">
-          Added on {moment(product.createdAt).fromNow()}
-        </p>
+        {shouldRedirect(redirect)}
+        <div className="product-image-container">
+          <ShowImage item={product} url="products" />
+        </div>
+        <div className="product-details">
+          <h5 className="product-name">{product.name}</h5>
+          <p className="product-price">${product.price}</p>
+          <p className="product-description text-truncate">
+            {product.description}
+          </p>
+          <div className="product-meta">
+            <span className="product-category">
+              {product.category && product.category.name}
+            </span>
+            <span className="product-date">
+              {moment(product.createdAt).fromNow()}
+            </span>
+          </div>
+        </div>
         {showStock(product.quantity)} <br />
         {showButton(showProductButton)}
         {showCartButton(showAddToCart)}
