@@ -7,50 +7,42 @@ import "../../assets/css/card.css";
 
 const ProductCard = ({
   product,
-  showProductButton = true,
+  showProduct = true,
   showAddToCart = true,
   cartUpdate = false,
   showRemoveButton = false,
   setRun = (f) => f, // default value of function
   run = undefined, // default value of undefined
 }) => {
-  const [redirect, setRedirect] = useState(false);
   const [count, setCount] = useState(product.count);
+  const [showAddToCartButton, setShowAddToCartButton] = useState(showAddToCart);
 
-  const showButton = () => {
+  const viewProduct = () => {
     return (
-      showProductButton && (
-        <Link to={`/product/${product._id}`} className="mr-2">
-          <button className="btn btn-outline-primary mt-2 mb-2">
-            View Product
-          </button>
+      showProduct && (
+        <Link to={`/product/${product._id}`} className="me-2">
+          <i className="fas fa-eye text-primary"></i>
         </Link>
       )
     );
   };
 
   const addToCart = () => {
-    // a bug is fixed here
     addItem(product, () => {
-      setRedirect(true);
+      setShowAddToCartButton(false);
     });
   };
 
-  const shouldRedirect = (redirect) => {
-    if (redirect) {
-      return <Redirect to="/cart" />;
-    }
-  };
-
-  const showCartButton = () => {
+  const viewCart = () => {
     return (
-      showAddToCart && (
-        <button
+      showAddToCartButton && (
+        <span
           onClick={addToCart}
-          className="btn btn-outline-warning mt-2 mb-2"
+          style={{ cursor: "pointer" }}
+          className="ms-2"
         >
-          Add to Cart
-        </button>
+          <i className="fas fa-cart-plus text-warning"></i>
+        </span>
       )
     );
   };
@@ -72,10 +64,13 @@ const ProductCard = ({
   };
 
   const showStock = (quantity) => {
+    if (quantity == null) return null;
     return quantity > 0 ? (
-      <span className="badge badge-primary badge-pill">In Stock</span>
+      <span className="badge bg-primary rounded-pill text-white">In Stock</span>
     ) : (
-      <span className="badge badge-warning badge-pill">Out of Stock</span>
+      <span className="badge bg-warning rounded-pill text-dark">
+        Out of Stock
+      </span>
     );
   };
 
@@ -110,16 +105,12 @@ const ProductCard = ({
   return (
     <div className="card product-card">
       <div className="card-body">
-        {shouldRedirect(redirect)}
         <div className="product-image-container">
           <ShowImage item={product} url="products" />
         </div>
         <div className="product-details">
           <h5 className="product-name">{product.name}</h5>
-          <p className="product-price">${product.price}</p>
-          <p className="product-description text-truncate">
-            {product.description}
-          </p>
+          <p className="product-price">৳{product.price}</p>
           <div className="product-meta">
             <span className="product-category">
               {product.category && product.category.name}
@@ -128,10 +119,11 @@ const ProductCard = ({
               {moment(product.createdAt).fromNow()}
             </span>
           </div>
+          <div>{showStock(product?.quantity ?? product?.count ?? 0)}</div>
         </div>
-        {showStock(product.quantity)} <br />
-        {showButton(showProductButton)}
-        {showCartButton(showAddToCart)}
+        <br />
+        {viewProduct(showProduct)}
+        {viewCart()}
         {removeCartItem(showRemoveButton)}
         {showUpdateCart(cartUpdate)}
       </div>
